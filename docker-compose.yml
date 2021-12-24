@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  immer:
+    image: immersspace/immers:latest
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+      - 8080:8080
+    env_file: '.env'
+    environment:
+      NODE_ENV: 'production'
+    depends_on:
+      - mongodb
+    volumes:
+      - ./:/usr/src/immers/static-ext
+      - certs:/root/.small-tech.org/auto-encrypt
+    logging:
+      driver: local
+      options:
+        max-size: '10m'
+    
+  mongodb:
+    image: mongo:4.2
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    logging:
+      driver: local
+      options:
+        max-size: '10m'
+  
+volumes:
+  mongo-data:
+  certs:

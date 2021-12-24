@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = true; // keep paths consistent for dev/prod to work in docker
 const publicPath = isProd ? "dist/" : "/";
 
 module.exports = {

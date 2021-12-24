@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "webpack serve",
+    "start": "docker-compose up --build -d",
+    "dev": "npm run start && webpack --watch",
     "build": "NODE_ENV=production webpack",
     "gen-assets": "node scripts/generate-assets.js",
     "fix-assets": "node scripts/fix-assets.js"
