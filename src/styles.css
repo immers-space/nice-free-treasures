@@ -45,14 +45,31 @@ body,
   flex-direction: column-reverse;
 }
 
-.selector {
-  overflow: auto;
+.panel-selector {
   width: 45%;
   background-color: var(--main-bg-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.panel-selector .panel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-selector .panel.collapsed {
+  flex-shrink: 0;
+}
+
+.selector {
+  overflow: auto;
+  height: 100%;
 }
 
 .selector .simpleBar {
-  padding: 32px 64px;
+  padding: 32px 16px;
 }
 
 .main {
@@ -139,7 +156,7 @@ label {
   border-color: var(--hover-border-color);
 }
 
-.partSelector .collapsible {
+.collapsible {
   overflow: hidden;
   margin: 14px;
   margin-top: 4px;
@@ -149,7 +166,7 @@ label {
   transition: transform 0.2s, opacity 0.2s;
 }
 
-.partSelector.collapsed .collapsible {
+.collapsed .collapsible {
   transform: scaleY(0);
   opacity: 0;
   height: 0;

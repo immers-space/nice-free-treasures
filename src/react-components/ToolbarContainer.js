@@ -9,19 +9,15 @@ function dispatchResetView() {
   dispatch(constants.resetView);
 }
 
-function dispatchExportAvatar() {
-  dispatch(constants.exportAvatar);
-}
-
 export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
   return (
     <Toolbar>
-      <span className="appName">Hackweek Avatar Maker</span>
+      <span className="appName">Nice Free Treasures Shop</span>
       <MoreMenu
         items={
           <>
             <UploadButton onGLBUploaded={onGLBUploaded} />
-            <a href="https://github.com/mozilla/hackweek-avatar-maker" target="_blank">
+            <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
               GitHub
             </a>
           </>
@@ -29,9 +25,6 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
       ></MoreMenu>
       <button onClick={randomizeConfig}>Randomize avatar</button>
       <button onClick={dispatchResetView}>Reset camera view</button>
-      <button onClick={dispatchExportAvatar} className="primary">
-        Export avatar
-      </button>
     </Toolbar>
   );
 }

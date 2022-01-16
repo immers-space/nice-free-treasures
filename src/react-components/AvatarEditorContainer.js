@@ -11,6 +11,9 @@ import { generateRandomConfig } from "../generate-random-config";
 import initialAssets from "../assets";
 import { isThumbnailMode } from "../utils";
 import debounce from "../utils/debounce";
+import { SelectPanel } from "./SelectPanel";
+import { CategoryHeading } from "./CategoryHeading";
+import { ClaimPanel } from "./ClaimPanel";
 
 // Used externally by the generate-thumbnails script
 const thumbnailMode = isThumbnailMode();
@@ -24,6 +27,8 @@ export function AvatarEditorContainer() {
   const initialConfig = generateRandomConfig(assets);
   const [avatarConfig, setAvatarConfig] = useState(initialConfig);
   const [tipState, setTipState] = useState({ visible: false, text: "", top: 0, left: 0 });
+
+  const [showClaim, setShowClaim] = useState(true);
 
   useEffect(() => {
     if (!thumbnailMode) {
@@ -109,35 +114,70 @@ export function AvatarEditorContainer() {
     setAvatarConfig(generateRandomConfig(assets));
   }
 
+  function onClaimAvatar() {
+    dispatch(constants.exportAvatar);
+  }
+
+  const editHeading = (
+    <CategoryHeading
+        {...{
+          categoryName: "Customize",
+          selectedPartName: "",
+          image: undefined,
+          isExpanded: !showClaim,
+          onClick: () => setShowClaim(!showClaim),
+          noImage: true
+        }}
+      />
+  );
+  const editPanel = (
+    <AvatarConfigurationPanel
+      {...{
+        avatarConfig,
+        assets,
+        onScroll: () => {
+          hideTip();
+        },
+        onSelectAvatarPart: ({ categoryName, part }) => {
+          updateAvatarConfig({ [categoryName]: part.value });
+        },
+        onHoverAvatarPart: ({ categoryName, part, tip, rect }) => {
+          debouncedSetHoveredConfig({ [categoryName]: part.value });
+          showTip(tip, rect.bottom, rect.left + rect.width / 2);
+        },
+        onUnhoverAvatarPart: () => {
+          debouncedSetHoveredConfig({});
+          hideTip();
+        },
+      }}
+    />
+  );
+
+  const claimHeading = (
+    <CategoryHeading
+        {...{
+          categoryName: "Claim",
+          selectedPartName: "",
+          image: undefined,
+          isExpanded: showClaim,
+          onClick: () => setShowClaim(!showClaim),
+          noImage: true
+        }}
+      />
+  );
+
+  const claimPanel = (
+    <ClaimPanel {...{ onClaimAvatar }} />
+  )
+
   return (
     <AvatarEditor
       {...{
         thumbnailMode,
-        leftPanel: (
-          <AvatarConfigurationPanel
-            {...{
-              avatarConfig,
-              assets,
-              onScroll: () => {
-                hideTip();
-              },
-              onSelectAvatarPart: ({ categoryName, part }) => {
-                updateAvatarConfig({ [categoryName]: part.value });
-              },
-              onHoverAvatarPart: ({ categoryName, part, tip, rect }) => {
-                debouncedSetHoveredConfig({ [categoryName]: part.value });
-                showTip(tip, rect.bottom, rect.left + rect.width / 2);
-              },
-              onUnhoverAvatarPart: () => {
-                debouncedSetHoveredConfig({});
-                hideTip();
-              },
-            }}
-          />
-        ),
+        leftPanel: <SelectPanel {...{ showClaim, editHeading, editPanel, claimHeading, claimPanel }} />,
         rightPanel: <AvatarPreviewContainer {...{ thumbnailMode, canvasUrl }} />,
         buttonTip: <ButtonTip {...tipState} />,
-        toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />,
+        toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />
       }}
     />
   );
