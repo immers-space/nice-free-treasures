@@ -45,6 +45,10 @@ body,
   flex-direction: column-reverse;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .panel-selector {
   width: 45%;
   background-color: var(--main-bg-color);

@@ -20,6 +20,7 @@ import uvScroll from "./uv-scroll";
 import idleEyes from "./idle-eyes";
 import assets from "./assets";
 import debugConfig from "./debug-config";
+import { store } from "./store";
 
 // Used to test mesh combination
 window.combineCurrentAvatar = async function () {
@@ -40,7 +41,7 @@ const state = {
   delta: 0,
   envMap: null,
   avatarGroup: null,
-  chestModel: null,
+  treasureGroup: null,
   testExportGroup: null,
   avatarNodes: {},
   avatarConfig: {},
@@ -53,6 +54,7 @@ const state = {
   shouldRotateLeft: false,
   shouldRotateRight: false,
   shouldOpenChest: false,
+  shouldRacyast: true,
   idleEyesMixers: {},
   uvScrollMaps: {},
   quietMode: false,
@@ -154,13 +156,14 @@ function init() {
   state.avatarGroup = new THREE.Group();
   state.avatarGroup.visible = false;
   scene.add(state.avatarGroup);
+  state.treasureGroup = new THREE.Group();
+  scene.add(state.treasureGroup);
   loadGLTF("assets/misc/chest/scene.gltf")
     .then(gltf => {
       const model = gltf.scene;
       model.scale.setScalar(0.007);
       model.position.y = 0.1;
-      scene.add(model);
-      state.chestModel = model;
+      state.treasureGroup.add(model);
     })
 
     state.raycaster = new THREE.Raycaster();
@@ -169,17 +172,25 @@ function init() {
       let canvasBounds = state.renderer.domElement.getBoundingClientRect();
       state.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
       state.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
+      state.shouldRacyast = true;
     }
     document.addEventListener("mousemove", onMouseMove);
     function onClick () {
-      state.intersections.length = 0;
-      state.raycaster.setFromCamera(state.mouse, state.camera);
-      state.raycaster.intersectObject(state.chestModel, true, state.intersections);
-      if (state.intersections.length) {
-        state.shouldOpenChest = true;
+      if (state.mouseOverTreasure) {
+        store.getState().openTreasure();
+        state.shouldRacyast = true;
       }
     }
     state.renderer.domElement.addEventListener("click", onClick)
+
+    store.subscribe(
+      state => state.isTreasureOpen,
+      isTreasureOpen => {
+        state.treasureGroup.visible = !isTreasureOpen;
+        state.avatarGroup.visible = isTreasureOpen;
+        state.shouldRacyast = true;
+      },
+    );
 }
 
 function playClips(scene, clips) {
@@ -421,10 +432,19 @@ function tick(time) {
     }
   }
 
-  if (state.shouldOpenChest) {
-    state.shouldOpenChest = false;
-    state.chestModel.visible = false;
-    state.avatarGroup.visible = true;
+  if (state.shouldRacyast) {
+    state.shouldRacyast = false;
+    state.intersections.length = 0;
+    state.raycaster.setFromCamera(state.mouse, state.camera);
+    if (state.treasureGroup.visible) {
+      state.raycaster.intersectObject(state.treasureGroup, true, state.intersections);
+    }
+    state.mouseOverTreasure = !!state.intersections.length;
+    if (state.mouseOverTreasure) {
+      state.renderer.domElement.classList.add("pointer")
+    } else {
+      state.renderer.domElement.classList.remove("pointer")
+    }
   }
 
   {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import constants from "../constants";
 import { generateWave } from "../utils";
 import { ToolbarContainer } from "./ToolbarContainer";
@@ -15,6 +15,7 @@ import { SelectPanel } from "./SelectPanel";
 import { CategoryHeading } from "./CategoryHeading";
 import { ClaimPanel } from "./ClaimPanel";
 import { IntroPanel } from "./IntroPanel";
+import { useStore } from "../store";
 
 // Used externally by the generate-thumbnails script
 const thumbnailMode = isThumbnailMode();
@@ -29,7 +30,11 @@ export function AvatarEditorContainer() {
   const [avatarConfig, setAvatarConfig] = useState(initialConfig);
   const [tipState, setTipState] = useState({ visible: false, text: "", top: 0, left: 0 });
 
-  const [selectedPanel, setSelectedPanel] = useState("Open");
+  const selectedPanel = useStore(useCallback(state => state.selectedPanel));
+  const setSelectedPanel = useStore(useCallback(state => state.setSelectedPanel));
+
+  const isTreasureOpen = useStore(useCallback(state => state.isTreasureOpen));
+  const closeTreasure = useStore(useCallback(state => state.closeTreasure));
 
   useEffect(() => {
     if (!thumbnailMode) {
@@ -44,6 +49,13 @@ export function AvatarEditorContainer() {
       setCanvasUrl(await generateWave());
     }
   });
+
+  // Reset when returning to into panel
+  useEffect(() => {
+    if (!isTreasureOpen) {
+      randomizeConfig();
+    }
+  }, [isTreasureOpen]);
 
   function updateAvatarConfig(newConfig) {
     setAvatarConfig({ ...avatarConfig, ...newConfig });
@@ -128,7 +140,7 @@ export function AvatarEditorContainer() {
     {
       title: "Claim",
       panel: <ClaimPanel {...{ onClaimAvatar }} />,
-      disabled: true
+      disabled: !isTreasureOpen
     },
     {
       title: "Customize",
@@ -154,15 +166,23 @@ export function AvatarEditorContainer() {
           }}
         />
       ),
-      disabled: true
+      disabled: !isTreasureOpen
     }
   ]
+
+  const onSelectPanel = useCallback(panel => {
+    if (panel === "Open") {
+      closeTreasure();
+    } else {
+      setSelectedPanel(panel);
+    }
+  })
 
   return (
     <AvatarEditor
       {...{
         thumbnailMode,
-        leftPanel: <SelectPanel {...{ panels, selectedPanel }} onSelectPanel={setSelectedPanel} />,
+        leftPanel: <SelectPanel {...{ panels, selectedPanel, onSelectPanel }} />,
         rightPanel: <AvatarPreviewContainer {...{ thumbnailMode, canvasUrl }} />,
         buttonTip: <ButtonTip {...tipState} />,
         toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />
