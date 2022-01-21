@@ -52,7 +52,7 @@ function parseSubCategories({ category, currentSelection }) {
 
   return optionNames.map((optionName) => {
     if (currentSelection.value === null && !category.description[optionName].isPrimaryOption) {
-      return { optionName, parts: [{part:{value: null, displayName: "None"}, tip: "None"}] }
+      return { optionName, parts: [{ part: { value: null, displayName: "None" }, tip: "None" }] };
     }
     const options = category.description[optionName].options;
     const parts = options

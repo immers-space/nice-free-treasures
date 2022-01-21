@@ -30,11 +30,11 @@ export function AvatarEditorContainer() {
   const [avatarConfig, setAvatarConfig] = useState(initialConfig);
   const [tipState, setTipState] = useState({ visible: false, text: "", top: 0, left: 0 });
 
-  const selectedPanel = useStore(useCallback(state => state.selectedPanel));
-  const setSelectedPanel = useStore(useCallback(state => state.setSelectedPanel));
+  const selectedPanel = useStore(useCallback((state) => state.selectedPanel));
+  const setSelectedPanel = useStore(useCallback((state) => state.setSelectedPanel));
 
-  const isTreasureOpen = useStore(useCallback(state => state.isTreasureOpen));
-  const closeTreasure = useStore(useCallback(state => state.closeTreasure));
+  const isTreasureOpen = useStore(useCallback((state) => state.isTreasureOpen));
+  const closeTreasure = useStore(useCallback((state) => state.closeTreasure));
 
   useEffect(() => {
     if (!thumbnailMode) {
@@ -135,12 +135,12 @@ export function AvatarEditorContainer() {
     {
       title: "Open",
       panel: <IntroPanel />,
-      disabled: false
+      disabled: false,
     },
     {
       title: "Claim",
       panel: <ClaimPanel {...{ onClaimAvatar }} />,
-      disabled: !isTreasureOpen
+      disabled: !isTreasureOpen,
     },
     {
       title: "Customize",
@@ -166,17 +166,18 @@ export function AvatarEditorContainer() {
           }}
         />
       ),
-      disabled: !isTreasureOpen
-    }
-  ]
+      disabled: !isTreasureOpen,
+    },
+  ];
 
-  const onSelectPanel = useCallback(panel => {
+  const onSelectPanel = useCallback((panel) => {
     if (panel === "Open") {
       closeTreasure();
+      dispatch(constants.resetView);
     } else {
       setSelectedPanel(panel);
     }
-  })
+  });
 
   return (
     <AvatarEditor
@@ -185,7 +186,7 @@ export function AvatarEditorContainer() {
         leftPanel: <SelectPanel {...{ panels, selectedPanel, onSelectPanel }} />,
         rightPanel: <AvatarPreviewContainer {...{ thumbnailMode, canvasUrl }} />,
         buttonTip: <ButtonTip {...tipState} />,
-        toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />
+        toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />,
       }}
     />
   );

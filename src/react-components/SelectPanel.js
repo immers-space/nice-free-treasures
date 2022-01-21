@@ -3,11 +3,10 @@ import cx from "classnames";
 import { Collapsible } from "./Collapsible";
 import { CategoryHeading } from "./CategoryHeading";
 
-
 export function SelectPanel({ panels, selectedPanel, onSelectPanel }) {
   return (
     <div className="panel-selector">
-      {panels.map(({title, panel, disabled}) =>
+      {panels.map(({ title, panel, disabled }) => (
         <div className={cx("panel", { collapsed: selectedPanel !== title, disabled })} key={title}>
           <CategoryHeading
             {...{
@@ -16,14 +15,12 @@ export function SelectPanel({ panels, selectedPanel, onSelectPanel }) {
               image: undefined,
               isExpanded: selectedPanel === title,
               onClick: () => onSelectPanel(title),
-              noImage: true
+              noImage: true,
             }}
           />
-          <Collapsible>
-            { panel }
-          </Collapsible>
+          <Collapsible>{panel}</Collapsible>
         </div>
-      )}
+      ))}
     </div>
   );
 }

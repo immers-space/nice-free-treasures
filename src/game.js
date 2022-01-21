@@ -158,39 +158,38 @@ function init() {
   scene.add(state.avatarGroup);
   state.treasureGroup = new THREE.Group();
   scene.add(state.treasureGroup);
-  loadGLTF("assets/misc/chest/scene.gltf")
-    .then(gltf => {
-      const model = gltf.scene;
-      model.scale.setScalar(0.007);
-      model.position.y = 0.1;
-      state.treasureGroup.add(model);
-    })
+  loadGLTF("assets/misc/chest/scene.gltf").then((gltf) => {
+    const model = gltf.scene;
+    model.scale.setScalar(0.007);
+    model.position.y = 0.1;
+    state.treasureGroup.add(model);
+  });
 
-    state.raycaster = new THREE.Raycaster();
-    state.mouse = new THREE.Vector2();
-    function onMouseMove(event) {
-      let canvasBounds = state.renderer.domElement.getBoundingClientRect();
-      state.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
-      state.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
+  state.raycaster = new THREE.Raycaster();
+  state.mouse = new THREE.Vector2();
+  function onMouseMove(event) {
+    let canvasBounds = state.renderer.domElement.getBoundingClientRect();
+    state.mouse.x = ((event.clientX - canvasBounds.left) / (canvasBounds.right - canvasBounds.left)) * 2 - 1;
+    state.mouse.y = -((event.clientY - canvasBounds.top) / (canvasBounds.bottom - canvasBounds.top)) * 2 + 1;
+    state.shouldRacyast = true;
+  }
+  document.addEventListener("mousemove", onMouseMove);
+  function onClick() {
+    if (state.mouseOverTreasure) {
+      store.getState().openTreasure();
       state.shouldRacyast = true;
     }
-    document.addEventListener("mousemove", onMouseMove);
-    function onClick () {
-      if (state.mouseOverTreasure) {
-        store.getState().openTreasure();
-        state.shouldRacyast = true;
-      }
-    }
-    state.renderer.domElement.addEventListener("click", onClick)
+  }
+  state.renderer.domElement.addEventListener("click", onClick);
 
-    store.subscribe(
-      state => state.isTreasureOpen,
-      isTreasureOpen => {
-        state.treasureGroup.visible = !isTreasureOpen;
-        state.avatarGroup.visible = isTreasureOpen;
-        state.shouldRacyast = true;
-      },
-    );
+  store.subscribe(
+    (state) => state.isTreasureOpen,
+    (isTreasureOpen) => {
+      state.treasureGroup.visible = !isTreasureOpen;
+      state.avatarGroup.visible = isTreasureOpen;
+      state.shouldRacyast = true;
+    }
+  );
 }
 
 function playClips(scene, clips) {
@@ -199,7 +198,7 @@ function playClips(scene, clips) {
   const mixer = new THREE.AnimationMixer(scene);
 
   for (const clip of clips) {
-    const animation = scene.animations.find(a => a.name === clip)
+    const animation = scene.animations.find((a) => a.name === clip);
     if (animation) {
       const action = mixer.clipAction(animation);
       action.play();
@@ -396,7 +395,7 @@ function tick(time) {
 
       // Reset all idle eyes animations before cloning or exporting the avatar
       // so that we don't export it mid-blink.
-      Object.values(state.idleEyesMixers).forEach(mixer => {
+      Object.values(state.idleEyesMixers).forEach((mixer) => {
         mixer.setTime(0);
       });
 
@@ -441,9 +440,9 @@ function tick(time) {
     }
     state.mouseOverTreasure = !!state.intersections.length;
     if (state.mouseOverTreasure) {
-      state.renderer.domElement.classList.add("pointer")
+      state.renderer.domElement.classList.add("pointer");
     } else {
-      state.renderer.domElement.classList.remove("pointer")
+      state.renderer.domElement.classList.remove("pointer");
     }
   }
 

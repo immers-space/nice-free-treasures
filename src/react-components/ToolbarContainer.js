@@ -20,7 +20,15 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
             <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
               Source code
             </a>
-            <p className="attribution"><a href="https://skfb.ly/6TwqF" target="_blank">"Low poly treasure chest"</a> by cattleya is licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution.</a></p>
+            <p className="attribution">
+              <a href="https://skfb.ly/6TwqF" target="_blank">
+                "Low poly treasure chest"
+              </a>{" "}
+              by cattleya is licensed under{" "}
+              <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
+                Creative Commons Attribution.
+              </a>
+            </p>
           </>
         }
       ></MoreMenu>

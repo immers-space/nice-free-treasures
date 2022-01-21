@@ -54,14 +54,11 @@ function maybeReplaceWithMatchingCategory(assets, newConfig, categoryName) {
   if (matchingAsset) {
     newConfig[categoryName] = matchingAsset.value;
   } else {
-    // If we don't find an exact match for the secondaryOption, 
+    // If we don't find an exact match for the secondaryOption,
     // we should find a random part that matches the desired primaryOption.
     const randomMatchingAsset = chooseWeightedRandom(
       category.parts.filter((part) => {
-        return (
-          part.description &&
-          part.description[primaryOption] === partToMatch.description[primaryOption]
-        );
+        return part.description && part.description[primaryOption] === partToMatch.description[primaryOption];
       })
     );
     if (randomMatchingAsset) {

@@ -3,4 +3,4 @@ export default {
   debugCanvases: false,
   disableDownload: false,
   debugExports: false,
-}
+};
