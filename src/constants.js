@@ -5,5 +5,6 @@ export default {
   reactIsLoaded: "reactIsLoaded",
   renderThumbnail: "renderThumbnail",
   thumbnailResult: "thumbnailResult",
+  chestOpened: "chestOpened",
   combinedMeshName: "CombinedMesh",
 };

@@ -59,6 +59,15 @@ body,
   flex-direction: column;
 }
 
+.panel-selector .panel.disabled {
+  pointer-events: none;
+  color: darkgray;
+}
+
+.panel-selector .panel:not(.collapsed) {
+  flex-grow: 1;
+}
+
 .panel-selector .panel.collapsed {
   flex-shrink: 0;
 }
@@ -69,7 +78,7 @@ body,
 }
 
 .selector .simpleBar {
-  padding: 32px 16px;
+  padding: 8px 16px;
 }
 
 .main {

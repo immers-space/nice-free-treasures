@@ -33,11 +33,14 @@ const state = {
   scene: null,
   camera: null,
   renderer: null,
+  raycaster: null,
+  intersections: [],
   controls: null,
   clock: null,
   delta: 0,
   envMap: null,
   avatarGroup: null,
+  chestModel: null,
   testExportGroup: null,
   avatarNodes: {},
   avatarConfig: {},
@@ -49,6 +52,7 @@ const state = {
   shouldRenderThumbnail: false,
   shouldRotateLeft: false,
   shouldRotateRight: false,
+  shouldOpenChest: false,
   idleEyesMixers: {},
   uvScrollMaps: {},
   quietMode: false,
@@ -148,7 +152,34 @@ function init() {
   scene.add(state.testExportGroup);
 
   state.avatarGroup = new THREE.Group();
+  state.avatarGroup.visible = false;
   scene.add(state.avatarGroup);
+  loadGLTF("assets/misc/chest/scene.gltf")
+    .then(gltf => {
+      const model = gltf.scene;
+      model.scale.setScalar(0.007);
+      model.position.y = 0.1;
+      scene.add(model);
+      state.chestModel = model;
+    })
+
+    state.raycaster = new THREE.Raycaster();
+    state.mouse = new THREE.Vector2();
+    function onMouseMove(event) {
+      let canvasBounds = state.renderer.domElement.getBoundingClientRect();
+      state.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+      state.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
+    }
+    document.addEventListener("mousemove", onMouseMove);
+    function onClick () {
+      state.intersections.length = 0;
+      state.raycaster.setFromCamera(state.mouse, state.camera);
+      state.raycaster.intersectObject(state.chestModel, true, state.intersections);
+      if (state.intersections.length) {
+        state.shouldOpenChest = true;
+      }
+    }
+    state.renderer.domElement.addEventListener("click", onClick)
 }
 
 function playClips(scene, clips) {
@@ -388,6 +419,12 @@ function tick(time) {
       state.shouldResetView = false;
       resetView();
     }
+  }
+
+  if (state.shouldOpenChest) {
+    state.shouldOpenChest = false;
+    state.chestModel.visible = false;
+    state.avatarGroup.visible = true;
   }
 
   {
