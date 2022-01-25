@@ -168,12 +168,16 @@ function init() {
   state.raycaster = new THREE.Raycaster();
   state.mouse = new THREE.Vector2();
   function onMouseMove(event) {
+    const x = event.touches ? event.touches[0].clientX : event.clientX;
+    const y = event.touches ? event.touches[0].clientY : event.clientY;
     let canvasBounds = state.renderer.domElement.getBoundingClientRect();
-    state.mouse.x = ((event.clientX - canvasBounds.left) / (canvasBounds.right - canvasBounds.left)) * 2 - 1;
-    state.mouse.y = -((event.clientY - canvasBounds.top) / (canvasBounds.bottom - canvasBounds.top)) * 2 + 1;
+    state.mouse.x = ((x - canvasBounds.left) / (canvasBounds.right - canvasBounds.left)) * 2 - 1;
+    state.mouse.y = -((y - canvasBounds.top) / (canvasBounds.bottom - canvasBounds.top)) * 2 + 1;
     state.shouldRacyast = true;
   }
-  document.addEventListener("mousemove", onMouseMove);
+  state.renderer.domElement.addEventListener("mousemove", onMouseMove);
+  state.renderer.domElement.addEventListener("touchstart", onMouseMove);
+  state.renderer.domElement.addEventListener("touchmove", onMouseMove);
   function onClick() {
     if (state.mouseOverTreasure) {
       store.getState().openTreasure();
@@ -181,6 +185,7 @@ function init() {
     }
   }
   state.renderer.domElement.addEventListener("click", onClick);
+  state.renderer.domElement.addEventListener("touchend", onClick);
 
   store.subscribe(
     (state) => state.isTreasureOpen,
