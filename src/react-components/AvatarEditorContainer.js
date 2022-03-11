@@ -138,11 +138,6 @@ export function AvatarEditorContainer() {
       disabled: false,
     },
     {
-      title: "Claim",
-      panel: <ClaimPanel {...{ onClaimAvatar }} />,
-      disabled: !isTreasureOpen,
-    },
-    {
       title: "Customize",
       panel: (
         <AvatarConfigurationPanel
@@ -166,6 +161,11 @@ export function AvatarEditorContainer() {
           }}
         />
       ),
+      disabled: !isTreasureOpen,
+    },
+    {
+      title: "Claim",
+      panel: <ClaimPanel {...{ onClaimAvatar }} />,
       disabled: !isTreasureOpen,
     },
   ];
