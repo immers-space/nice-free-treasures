@@ -35,6 +35,7 @@ export function AvatarEditorContainer() {
 
   const isTreasureOpen = useStore(useCallback((state) => state.isTreasureOpen));
   const closeTreasure = useStore(useCallback((state) => state.closeTreasure));
+  const setShouldRenderSelfie = useStore(useCallback((state) => state.setShouldRenderSelfie));
 
   useEffect(() => {
     if (!thumbnailMode) {
@@ -131,6 +132,10 @@ export function AvatarEditorContainer() {
     dispatch(constants.exportAvatar);
   }
 
+  function handleScreenshot() {
+    setShouldRenderSelfie(true);
+  }
+
   const panels = [
     {
       title: "Open",
@@ -165,7 +170,7 @@ export function AvatarEditorContainer() {
     },
     {
       title: "Claim",
-      panel: <ClaimPanel {...{ onClaimAvatar }} />,
+      panel: <ClaimPanel {...{ onClaimAvatar, handleScreenshot }} />,
       disabled: !isTreasureOpen,
     },
   ];

@@ -308,6 +308,17 @@ button.primary:focus {
   margin: 10px 0;
 }
 
+.info-modal-link {
+  text-decoration-style: dashed;
+  cursor: help;
+  color: #555;
+}
+
+.faded {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @keyframes wave {
   from { background-position-y: 0 }
   to { background-position-y: 400px; }

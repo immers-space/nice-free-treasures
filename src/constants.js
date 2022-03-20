@@ -4,6 +4,7 @@ export default {
   resetView: "resetView",
   reactIsLoaded: "reactIsLoaded",
   renderThumbnail: "renderThumbnail",
+  renderSelfie: "renderSelfie",
   thumbnailResult: "thumbnailResult",
   chestOpened: "chestOpened",
   combinedMeshName: "CombinedMesh",

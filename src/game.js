@@ -502,6 +502,19 @@ function tick(time) {
       renderer.render(scene, camera);
     }
   }
+
+  {
+    const { shouldRenderSelfie, setShouldRenderSelfie } = store.getState();
+    if (shouldRenderSelfie) {
+      setShouldRenderSelfie(false);
+      state.renderer.domElement.toBlob((blob) => {
+        const result = document.createElement("img");
+        result.id = constants.thumbnailResult;
+        document.body.append(result);
+        result.src = URL.createObjectURL(blob);
+      });
+    }
+  }
 }
 
 window.requestAnimationFrame(tick);
