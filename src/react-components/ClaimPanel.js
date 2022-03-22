@@ -28,6 +28,13 @@ export function ClaimPanel({ onClaimAvatar, handleScreenshot }) {
       setShowCheckResult(true);
     }
   }, [compat, step]);
+  useEffect(() => {
+    if (step === 1) {
+      document.body.classList.add("selfieFrame");
+    } else {
+      document.body.classList.remove("selfieFrame");
+    }
+  }, [step]);
   async function handleCheck() {
     setChecking(true);
     try {
@@ -71,54 +78,67 @@ export function ClaimPanel({ onClaimAvatar, handleScreenshot }) {
       setCompat("");
     }
   };
+
+  const handleSnap = useCallback(() => {
+    document.body.classList.add("selfieFlash");
+    setPaused(true);
+    setShouldRenderSelfie(true);
+    setStep(2);
+  }, [setPaused]);
+
   return (
     <div className="selector">
-      <SimpleBar className="simpleBar" style={{ height: "100%" }}>
-        <p>
-          Nice free treasure! Now we'll create a <ModalWCInfo>WebCollectible</ModalWCInfo> to show that it's yours.
-        </p>
-        <ol>
-          <li className={cx({ faded: step !== 0 })}>
-            Who is claming the avatar?
-            {step <= 0 ? (
-              <Form>
-                <Form.Group controlId="immers-handle.username">
-                  <Form.Label className="mb-0">Username</Form.Label>
-                  <Form.Control type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
-                </Form.Group>
-                <Form.Group controlId="immers-handle.immer">
-                  <Form.Label className="mb-0">
-                    <ModalImmersInfo>Immer</ModalImmersInfo> or Website domain
-                  </Form.Label>
-                  <Form.Control type="text" value={immer} onChange={(e) => setImmer(e.target.value)} />
-                </Form.Group>
-                <Button variant="primary" onClick={handleCheck} disabled={checking}>
-                  Check {checking && <Spinner animation="border" size="sm" />}
-                </Button>
-              </Form>
-            ) : (
-              <span className="handle">
-                {userName}[{immer}]
-              </span>
-            )}
-          </li>
-          <li className={cx({ faded: step !== 1 })}>
-            Pose for your selfie
-            <p>Click/touch and drag on your avatar to get that perfect pose</p>
-            <Button onClick={handleScreenshot}>Snap</Button>
-          </li>
-        </ol>
-        <ModalCheckResult
-          show={showCheckResult}
-          compat={compat}
-          handleResponse={handleCheckResponse}
-          profile={profile}
-        />
-        <p>Step: {step}</p>
-        <button onClick={onClaimAvatar} className="primary">
-          Claim avatar
-        </button>
-      </SimpleBar>
+      <p>
+        Nice free treasure! Now we'll create a <ModalWCInfo>WebCollectible</ModalWCInfo> to show that it's yours.
+      </p>
+      <ol>
+        <li className={cx({ faded: step !== 0 })}>
+          Who is claming the avatar?{" "}
+          {step <= 0 ? (
+            <Form>
+              <Form.Group controlId="immers-handle.username">
+                <Form.Label className="mb-0">Username</Form.Label>
+                <Form.Control type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
+              </Form.Group>
+              <Form.Group controlId="immers-handle.immer">
+                <Form.Label className="mb-0">
+                  <ModalImmersInfo>Immer</ModalImmersInfo> or Website domain
+                </Form.Label>
+                <Form.Control type="text" value={immer} onChange={(e) => setImmer(e.target.value)} />
+              </Form.Group>
+              <Button variant="primary" onClick={handleCheck} disabled={checking}>
+                Check {checking && <Spinner animation="border" size="sm" />}
+              </Button>
+            </Form>
+          ) : (
+            <span className="handle">
+              {userName}[{immer}]
+            </span>
+          )}
+        </li>
+        <li className={cx({ faded: step !== 1 })}>
+          Pose for your selfie
+          {step == 1 && (
+            <div>
+              <div>
+                Get that perfect pose: Drag to orient, scroll/pinch to zoom, and right-click/two-finger drag to
+                position.
+              </div>
+              <Button onClick={handleSnap}>Snap</Button>
+            </div>
+          )}
+        </li>
+        <li className={cx({ faded: step !== 2 })}>
+          Claim your nice free treasure
+          {step === 2 && (
+            <div>
+              <div>{claimStatus || "Click the button to claim your WebCollectible."}</div>
+              <Button onClick={onClaimAvatar}>Claim {claimStatus && <Spinner animation="border" size="sm" />}</Button>
+            </div>
+          )}
+        </li>
+      </ol>
+      <ModalCheckResult show={showCheckResult} compat={compat} handleResponse={handleCheckResponse} profile={profile} />
     </div>
   );
 }

@@ -497,7 +497,8 @@ function tick(time) {
 
   {
     const { renderer, scene, camera, controls } = state;
-    if (!state.quietMode || state.shouldRenderInQuietMode) {
+    const { paused } = store.getState();
+    if (!paused && (!state.quietMode || state.shouldRenderInQuietMode)) {
       state.shouldRenderInQuietMode = false;
       renderer.render(scene, camera);
     }

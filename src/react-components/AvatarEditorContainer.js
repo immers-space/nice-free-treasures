@@ -130,10 +130,8 @@ export function AvatarEditorContainer() {
 
   function onClaimAvatar() {
     dispatch(constants.exportAvatar);
-  }
-
-  function handleScreenshot() {
     setShouldRenderSelfie(true);
+
   }
 
   const panels = [
@@ -149,9 +147,6 @@ export function AvatarEditorContainer() {
           {...{
             avatarConfig,
             assets,
-            onScroll: () => {
-              hideTip();
-            },
             onSelectAvatarPart: ({ categoryName, part }) => {
               updateAvatarConfig({ [categoryName]: part.value });
             },
@@ -170,7 +165,7 @@ export function AvatarEditorContainer() {
     },
     {
       title: "Claim",
-      panel: <ClaimPanel {...{ onClaimAvatar, handleScreenshot }} />,
+      panel: <ClaimPanel {...{ onClaimAvatar, claimStatus }} />,
       disabled: !isTreasureOpen,
     },
   ];
@@ -188,7 +183,7 @@ export function AvatarEditorContainer() {
     <AvatarEditor
       {...{
         thumbnailMode,
-        leftPanel: <SelectPanel {...{ panels, selectedPanel, onSelectPanel }} />,
+        leftPanel: <SelectPanel {...{ panels, selectedPanel, onSelectPanel, onScroll: hideTip }} />,
         rightPanel: <AvatarPreviewContainer {...{ thumbnailMode, canvasUrl }} />,
         buttonTip: <ButtonTip {...tipState} />,
         toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />,

@@ -30,7 +30,7 @@ body {
 
 * {
   font-family: Poppins, sans-serif;
-  font-size: 12pt;
+  font-size: 10pt;
   box-sizing: border-box;
 }
 
@@ -49,12 +49,26 @@ body,
   cursor: pointer;
 }
 
+.main {
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+  flex-direction: column-reverse;
+}
+
+#sceneContainer {
+  position: relative;
+  flex: 0 0 100vw;
+  aspect-ratio: 1;
+}
+
 .panel-selector {
-  width: 45%;
+  flex: 1;
   background-color: var(--main-bg-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 .panel-selector .panel {
@@ -83,17 +97,6 @@ body,
 
 .selector .simpleBar {
   padding: 8px 16px;
-}
-
-.main {
-  display: flex;
-  overflow: hidden;
-  flex: 1;
-}
-
-#sceneContainer {
-  position: relative;
-  width: 55%;
 }
 
 button,
@@ -232,7 +235,7 @@ label {
 }
 
 .toolbar {
-  padding: 20px 20px;
+  padding: 5px 20px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -285,8 +288,8 @@ button.primary:focus {
 }
 
 .menuContainer .menuButton {
-  --button-size: 70px;
-  font-size: 20pt;
+  --button-size: 30px;
+  font-size: 12pt;
   width: var(--button-size);
   height: var(--button-size);
   border-radius: var(--button-size);
@@ -295,6 +298,7 @@ button.primary:focus {
 
 .menu {
   position: absolute;
+  right: 0;
   z-index: 1;
   background-color: var(--toolbar-bg-color);
   display: flex;
@@ -319,14 +323,24 @@ button.primary:focus {
   pointer-events: none;
 }
 
+.selfieFlash #sceneContainer {
+  animation: flash 0.2s ease-in-out 0s 2 alternate none;
+}
+
 @keyframes wave {
   from { background-position-y: 0 }
   to { background-position-y: 400px; }
 }
 
+@keyframes flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 .waveContainer {
+  display: none;
   position: absolute;
-  width: 60px;
+  width: 20px;
   height: 100%;
   pointer-events: none;
   background-repeat: repeat-y;
@@ -336,12 +350,28 @@ button.primary:focus {
   left: -1px;
 }
 
-@media (min-width: 1200px) {
+@media (min-aspect-ratio: 5/8) {
   #root {
     flex-direction: column;
   }
+  .main {
+    flex-direction: row;
+  }
+  #sceneContainer {
+    flex: 0 0 55%;
+    aspect-ratio: unset;
+    width: 55%;
+  }
+  .waveContainer {
+    display: block;
+  }
+}
+ @media (min-width: 800px) and (min-height: 800px) {
   .toolbar {
     padding: 20px 40px;
+  }
+  * {
+    font-size: 12pt;
   }
   .appName {
     font-size: 24pt;
@@ -350,4 +380,15 @@ button.primary:focus {
     bottom: 85px;
     flex-direction: column-reverse;
   }
-}
+  .menuContainer .menuButton {
+    --button-size: 70px;
+    font-size: 20pt;
+
+  }
+  .toolbar {
+    padding: 20px 20px;
+  }
+  .waveContainer {
+    width: 60px;
+  }
+ }

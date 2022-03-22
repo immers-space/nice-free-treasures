@@ -42,11 +42,5 @@ export function AvatarConfigurationPanel({
     );
   });
 
-  return (
-    <div className="selector">
-      <SimpleBar className="simpleBar" style={{ height: "100%" }} scrollableNodeProps={{ onScroll }}>
-        {partSelectors}
-      </SimpleBar>
-    </div>
-  );
+  return <div className="selector">{partSelectors}</div>;
 }

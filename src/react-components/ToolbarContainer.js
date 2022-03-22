@@ -16,6 +16,7 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
       <MoreMenu
         items={
           <>
+            <button onClick={dispatchResetView}>Reset camera view</button>
             <UploadButton onGLBUploaded={onGLBUploaded} />
             <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
               Source code
@@ -32,7 +33,6 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
           </>
         }
       ></MoreMenu>
-      <button onClick={dispatchResetView}>Reset camera view</button>
     </Toolbar>
   );
 }
