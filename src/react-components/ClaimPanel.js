@@ -18,10 +18,13 @@ export function ClaimPanel({ onClaimAvatar, handleScreenshot }) {
   const [showCheckResult, setShowCheckResult] = useState(false);
   const [checking, setChecking] = useState(false);
 
-  useEffect(() => {
-    setUserName("will");
-    setImmer("localhost:8081");
-  }, []);
+  const setPaused = useStore(useCallback((state) => state.setPaused));
+  const setShouldRenderSelfie = useStore(useCallback((state) => state.setShouldRenderSelfie));
+
+  // useEffect(() => {
+  //   setUserName("will");
+  //   setImmer("localhost:8081");
+  // }, []);
 
   useEffect(() => {
     if (compat && step === 0) {
