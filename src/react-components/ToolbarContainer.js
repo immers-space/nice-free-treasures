@@ -1,6 +1,6 @@
 import React from "react";
 import { Toolbar } from "./Toolbar";
-import { UploadButton } from "./UploadButton";
+// import { UploadButton } from "./UploadButton";
 import { MoreMenu } from "./MoreMenu";
 import { dispatch } from "../dispatch";
 import constants from "../constants";
@@ -17,7 +17,7 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
         items={
           <>
             <button onClick={dispatchResetView}>Reset camera view</button>
-            <UploadButton onGLBUploaded={onGLBUploaded} />
+            {/* <UploadButton onGLBUploaded={onGLBUploaded} /> */}
             <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
               Source code
             </a>

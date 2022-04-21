@@ -350,6 +350,21 @@ button.primary:focus {
   left: -1px;
 }
 
+.modal-claimed .modal-dialog {
+  max-width: 600px;
+}
+
+.modal-claimed .modal-body {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+}
+
+iframe.activity-embed {
+  width: 100%;
+  flex-grow: 1;
+}
+
 @media (min-aspect-ratio: 5/8) {
   #root {
     flex-direction: column;

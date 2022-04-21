@@ -10,8 +10,8 @@ export function ModalCheckResult({ show, compat, handleResponse, profile }) {
       <Modal.Body>
         {compat === "fallback" && (
           <p>
-            Your provider doesn't apear to support open Web standards. We can still create your collectible, but you'll
-            just have to right-click-save it.
+            Your provider doesn't apear to support open Web standards. We can still create your collectible and provide
+            a sharable link.
           </p>
         )}
         {compat === "ActivityPub" && (
@@ -29,7 +29,7 @@ export function ModalCheckResult({ show, compat, handleResponse, profile }) {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => handleResponse(false)}>
-          Try Again
+          Go Back
         </Button>
         <Button variant="primary" onClick={() => handleResponse(true)}>
           OK

@@ -6,6 +6,7 @@ import { ButtonTip } from "./ButtonTip";
 import { AvatarPreviewContainer } from "./AvatarPreviewContainer";
 import { AvatarConfigurationPanel } from "./AvatarConfigurationPanel";
 import { AvatarEditor } from "./AvatarEditor";
+import { ModalClaimed } from "./ModalClaimed";
 import { dispatch } from "../dispatch";
 import { generateRandomConfig } from "../generate-random-config";
 import initialAssets from "../assets";
@@ -16,6 +17,8 @@ import { CategoryHeading } from "./CategoryHeading";
 import { ClaimPanel } from "./ClaimPanel";
 import { IntroPanel } from "./IntroPanel";
 import { useStore } from "../store";
+import { getShopKeepActivities, immersClient } from "../utils/immers";
+import { Activities, ImmersClient } from "immers-client";
 
 // Used externally by the generate-thumbnails script
 const thumbnailMode = isThumbnailMode();
@@ -25,6 +28,9 @@ export function AvatarEditorContainer() {
   const [hoveredConfig, setHoveredConfig] = useState({});
   const debouncedSetHoveredConfig = useCallback(debounce(setHoveredConfig), [setHoveredConfig]);
   const [canvasUrl, setCanvasUrl] = useState(null);
+  const [claimStatus, setClaimStatus] = useState("");
+  const [compat, setCompat] = useState("");
+  const [nftUrl, setNftUrl] = useState("");
 
   const initialConfig = generateRandomConfig(assets);
   const [avatarConfig, setAvatarConfig] = useState(initialConfig);
@@ -35,7 +41,9 @@ export function AvatarEditorContainer() {
 
   const isTreasureOpen = useStore(useCallback((state) => state.isTreasureOpen));
   const closeTreasure = useStore(useCallback((state) => state.closeTreasure));
-  const setShouldRenderSelfie = useStore(useCallback((state) => state.setShouldRenderSelfie));
+  const thumbnailBlob = useStore(useCallback((state) => state.thumbnailBlob));
+  const avatarBlob = useStore(useCallback((state) => state.avatarBlob));
+  const profile = useStore(useCallback((state) => state.profile));
 
   useEffect(() => {
     if (!thumbnailMode) {
@@ -57,6 +65,71 @@ export function AvatarEditorContainer() {
       randomizeConfig();
     }
   }, [isTreasureOpen]);
+
+  useEffect(async () => {
+    if (!thumbnailBlob || !avatarBlob) {
+      return;
+    }
+    try {
+      const shopKeepActivities = await getShopKeepActivities();
+      // upload avatar/thumbnail and post Create activity with new Model
+      const treasureIRI = await shopKeepActivities.model(
+        `${profile.displayName}'s Nice Free Treasure`,
+        avatarBlob,
+        thumbnailBlob,
+        [],
+        "public"
+      );
+      setClaimStatus("created");
+      if (compat === "WebCollectibles") {
+        const offerIRI = await window
+          .fetch(`/claim-treasure`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              requestorId: profile.id,
+              createdId: treasureIRI,
+            }),
+          })
+          .then((result) => {
+            if (!result.ok) {
+              throw new Error(`Error offering avatar: ${result.status}`);
+            }
+            return result.headers.get("Location");
+          });
+        setClaimStatus("shared");
+        setNftUrl(offerIRI);
+      } else if (compat === "ActivityPub") {
+        const postIRI = await window
+          .fetch(`/share-treasure`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              requestorId: profile.id,
+              createdId: treasureIRI,
+            }),
+          })
+          .then((result) => {
+            if (!result.ok) {
+              throw new Error(`Error sharing avatar: ${result.status}`);
+            }
+            return result.headers.get("Location");
+          });
+        setClaimStatus("shared");
+        setNftUrl(treasureIRI);
+      } else {
+        setClaimStatus("shared");
+        setNftUrl(treasureIRI);
+      }
+    } catch (err) {
+      console.error(err);
+      setClaimStatus("");
+    }
+  }, [thumbnailBlob, avatarBlob]);
 
   function updateAvatarConfig(newConfig) {
     setAvatarConfig({ ...avatarConfig, ...newConfig });
@@ -130,8 +203,7 @@ export function AvatarEditorContainer() {
 
   function onClaimAvatar() {
     dispatch(constants.exportAvatar);
-    setShouldRenderSelfie(true);
-
+    setClaimStatus("processing");
   }
 
   const panels = [
@@ -165,7 +237,7 @@ export function AvatarEditorContainer() {
     },
     {
       title: "Claim",
-      panel: <ClaimPanel {...{ onClaimAvatar, claimStatus }} />,
+      panel: <ClaimPanel {...{ onClaimAvatar, claimStatus, compat, setCompat }} />,
       disabled: !isTreasureOpen,
     },
   ];
@@ -187,6 +259,7 @@ export function AvatarEditorContainer() {
         rightPanel: <AvatarPreviewContainer {...{ thumbnailMode, canvasUrl }} />,
         buttonTip: <ButtonTip {...tipState} />,
         toolbar: <ToolbarContainer {...{ onGLBUploaded, randomizeConfig }} />,
+        modal: <ModalClaimed {...{ nftUrl, compat }} />,
       }}
     />
   );

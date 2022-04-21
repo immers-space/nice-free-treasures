@@ -10,8 +10,10 @@ export const store = createVanilla(
     shouldRenderSelfie: false,
     thumbnailUrl: null,
     thumbnailBlob: null,
-    avatarBlobl: null,
+    avatarBlob: null,
     paused: false,
+    handle: undefined,
+    profile: {},
     closeTreasure: () => set({ isTreasureOpen: false, selectedPanel: "Open" }),
     openTreasure: () => set({ isTreasureOpen: true, selectedPanel: "Claim" }),
     setSelectedPanel: (panel) => set({ selectedPanel: panel }),
@@ -25,6 +27,8 @@ export const store = createVanilla(
       set({ thumbnailUrl });
     },
     setPaused: (paused) => set({ paused }),
+    setHandle: (handle) => set({ handle }),
+    setProfile: (profile) => set({ profile }),
   }))
 );
 

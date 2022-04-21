@@ -25,6 +25,8 @@ export function ModalImmersInfo({ children }) {
             by Immers Space.
           </p>
           <p>If you're an immerser, your enter the domain of your home immer, e.g. immers.space</p>
+          <p>If you use a different ActivityPub app like Mastodon, enter your instance domain, e.g. mastodon.social</p>
+          <p>If you use a closed network like Twitter, enter the site, e.g. twitter.com</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" href="https://web.immers.space/what-is-immers-space/" target="_blank">

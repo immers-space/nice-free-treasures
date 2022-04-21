@@ -131,7 +131,11 @@ function init() {
   scene.add(directionalLight);
 
   // TODO: Square this with react
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("scene"), antialias: true });
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById("scene"),
+    antialias: true,
+    preserveDrawingBuffer: true,
+  });
   renderer.physicallyCorrectLights = true;
   renderer.gammaOutput = true;
   state.renderer = renderer;
@@ -405,17 +409,17 @@ function tick(time) {
       });
 
       exportAvatar(state.avatarGroup).then(({ glb }) => {
-        const blob = new Blob([glb], { type: "application/octet-stream" });
+        const blob = new Blob([glb], { type: "application/gltf-binary" });
         const url = URL.createObjectURL(blob);
-
-        if (!debugConfig.disableDownload) {
-          const el = document.createElement("a");
-          el.style.display = "none";
-          el.href = url;
-          el.download = "custom_avatar.glb";
-          el.click();
-          el.remove();
-        }
+        store.setState({ avatarBlob: blob });
+        // if (!debugConfig.disableDownload) {
+        //   const el = document.createElement("a");
+        //   el.style.display = "none";
+        //   el.href = url;
+        //   el.download = "custom_avatar.glb";
+        //   el.click();
+        //   el.remove();
+        // }
 
         if (debugConfig.debugExports) {
           loadGLTF(url).then((gltf) => {
@@ -509,10 +513,7 @@ function tick(time) {
     if (shouldRenderSelfie) {
       setShouldRenderSelfie(false);
       state.renderer.domElement.toBlob((blob) => {
-        const result = document.createElement("img");
-        result.id = constants.thumbnailResult;
-        document.body.append(result);
-        result.src = URL.createObjectURL(blob);
+        store.setState({ thumbnailBlob: blob });
       });
     }
   }
