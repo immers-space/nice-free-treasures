@@ -23,11 +23,6 @@ export function ClaimPanel({ onClaimAvatar, claimStatus, compat, setCompat }) {
   const setProfile = useStore(useCallback((state) => state.setProfile));
 
   useEffect(() => {
-    setUserName("will");
-    setImmer("localhost:8081");
-  }, []);
-
-  useEffect(() => {
     if (compat && step === 0) {
       setShowCheckResult(true);
     }
