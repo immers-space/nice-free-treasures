@@ -75,14 +75,17 @@ module.exports = function (app, immer, apex) {
       const to = [apex.consts.publicAddress];
       const cc = [claimee.id, shopKeep.followers[0]];
       const handle = `@${claimee.preferredUsername}@${new URL(requestorId).host}`;
+      const tag = `<span class="h-card"><a href="${
+        claimee.url || claimee.id
+      }" class="u-url mention">@<span>${handle}</span></a></span>`;
       const createNote = await apex.buildActivity("Create", shopKeepId, to, {
         inReplyTo: create.id,
         object: {
           id: apex.utils.objectIdToIRI(),
           type: "Note",
           attributedTo: shopKeepId,
-          content: `<p>This <a href="${create.id}">Nice Free Treasure</a> was created for ${handle}</p>`,
-          tags: [{ type: "Mention", href: claimee.id, name: handle }],
+          content: `<p>This <a href="${create.id}">Nice Free Treasure</a> was created for ${tag}</p>`,
+          tag: [{ type: "Mention", href: claimee.id, name: handle }],
           to,
           cc,
         },
