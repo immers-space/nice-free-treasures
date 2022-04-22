@@ -93,6 +93,7 @@ module.exports = function (app, immer, apex) {
         cc,
       });
       createNote.object[0].published = createNote.published;
+      await apex.store.saveObject(createNote.object[0]);
       if (apex.domain.startsWith("localhost")) {
         console.log("Not delivering activity in dev mode", JSON.stringify(createNote, undefined, 2));
         await apex.store.saveActivity(createNote);
