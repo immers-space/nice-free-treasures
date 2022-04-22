@@ -18,9 +18,23 @@ export function ToolbarContainer({ onGLBUploaded, randomizeConfig }) {
           <>
             <button onClick={dispatchResetView}>Reset camera view</button>
             {/* <UploadButton onGLBUploaded={onGLBUploaded} /> */}
-            <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
-              Source code
-            </a>
+            <p>
+              Created by{" "}
+              <a href="https://web.immers.space" target="_blank">
+                Immers Space
+              </a>
+            </p>
+            <p>
+              Join our{" "}
+              <a href="https://eepurl.com/hhhvE1" target="_blank" rel="nofollow">
+                mailing list
+              </a>
+            </p>
+            <p>
+              <a href="https://github.com/immers-space/nice-free-treasures" target="_blank">
+                Source code
+              </a>
+            </p>
             <p className="attribution">
               <a href="https://skfb.ly/6TwqF" target="_blank">
                 "Low poly treasure chest"

@@ -11,7 +11,13 @@ items with a verifiable history but without any transaction
 fees or wasteful consensus work.
 
 This is a fork of the [Hackweek Avatar Maker](https://github.com/mozilla/hackweek-avatar-maker) created by the
-Mozilla Hubs team. 
+Mozilla Hubs team. Here's what we've added:
+
+* Mobile responsive layout
+* Treasure opening experience
+* Owernship verification with ActivityPub (non-blockchain) ledger entry
+* Save avatars directly to your Immers Space profile
+* Multi-platform social sharing for created avatars
 
 [Visit the Nice Free Treasures Shop](https://nice.freetreasures.shop)
 

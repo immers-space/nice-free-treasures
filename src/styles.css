@@ -327,6 +327,11 @@ button.primary:focus {
   animation: flash 0.2s ease-in-out 0s 2 alternate none;
 }
 
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @keyframes wave {
   from { background-position-y: 0 }
   to { background-position-y: 400px; }

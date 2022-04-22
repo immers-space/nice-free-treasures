@@ -152,7 +152,7 @@ export function ClaimPanel({ onClaimAvatar, claimStatus, compat, setCompat }) {
             <div>
               <div>Click the button to claim your WebCollectible.</div>
               <Button onClick={onClaimAvatar} disabled={claimStatus}>
-                Claim {claimStatus === "processing" && <Spinner animation="border" size="sm" />}
+                Claim {claimStatus && claimStatus !== "shared" && <Spinner animation="border" size="sm" />}
               </Button>
             </div>
           )}

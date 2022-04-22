@@ -41,7 +41,7 @@ export function ModalClaimed({ nftUrl, compat }) {
         <Modal.Title>Your Nice Free Treasure</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
+        <p className="text-overflow">
           Congratulations! Your Nice Free Treasure has been created. You can share this link to prove that it was
           created for you on the ActivityPub federated ledger:
           <br />
@@ -54,6 +54,11 @@ export function ModalClaimed({ nftUrl, compat }) {
               {collecting == "pending" && <Spinner animation="border" size="sm" />}
               {collecting == "done" && " ✔️"}
             </Button>
+            {collecting == "done" && (
+              <a target="_blank" href={`${profile.id}/Inbox`}>
+                View on your profile
+              </a>
+            )}
           </p>
         )}
         {compat === "ActivityPub" && <p>A link to this has been shared to you timeline as well.</p>}
