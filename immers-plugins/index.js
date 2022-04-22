@@ -72,8 +72,8 @@ module.exports = function (app, immer, apex) {
       }
       const create = await apex.store.getActivity(createdId);
       const claimee = await apex.resolveObject(requestorId);
-      const to = [claimee.id];
-      const cc = [apex.consts.publicAddress, shopKeep.followers[0]];
+      const to = [apex.consts.publicAddress];
+      const cc = [claimee.id, shopKeep.followers[0]];
       const handle = `@${claimee.preferredUsername}@${new URL(requestorId).host}`;
       const createNote = await apex.buildActivity("Create", shopKeepId, to, {
         inReplyTo: create.id,
@@ -81,7 +81,7 @@ module.exports = function (app, immer, apex) {
           id: apex.utils.objectIdToIRI(),
           type: "Note",
           attributedTo: shopKeepId,
-          content: `This <a href="${create.id}">Nice Free Treasure</a> was created for ${handle}`,
+          content: `<p>This <a href="${create.id}">Nice Free Treasure</a> was created for ${handle}</p>`,
           tags: [{ type: "Mention", href: claimee.id, name: handle }],
           to,
           cc,
