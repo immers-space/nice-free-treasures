@@ -48,7 +48,8 @@ module.exports = function (app, immer, apex) {
         inReplyTo: create.id,
         object: create.object,
         target: claimee.streams?.avatars ?? claimee.streams?.collectibles ?? claimee.id,
-        to: [apex.consts.publicAddress, shopKeep.followers[0], requestorId],
+        to: [requestorId],
+        cc: [apex.consts.publicAddress, shopKeep.followers[0]],
         summary: `<span>${shopKeep.name} offered this Nice Free Treasure to ${handle}</span>`,
       });
       await apex.addToOutbox(shopKeep, offer);
@@ -71,20 +72,25 @@ module.exports = function (app, immer, apex) {
       }
       const create = await apex.store.getActivity(createdId);
       const claimee = await apex.resolveObject(requestorId);
-      const to = [apex.consts.publicAddress, shopKeep.followers[0], claimee.id];
+      const to = [claimee.id];
+      const cc = [apex.consts.publicAddress, shopKeep.followers[0]];
       const handle = `@${claimee.preferredUsername}@${new URL(requestorId).host}`;
-      const createNote = await apex.buildActivity("Create", shopKeepId, claimee.id, {
+      const createNote = await apex.buildActivity("Create", shopKeepId, to, {
         inReplyTo: create.id,
         object: {
           type: "Note",
           attributedTo: shopKeepId,
-          content: `This <a href=${create.object.id}>Nice Free Treasure</a> was created for ${handle}`,
+          content: `This <a href="${create.id}">Nice Free Treasure</a> was created for ${handle}`,
+          tags: [{ type: "Mention", href: claimee.id, name: handle }],
           to,
+          cc,
         },
         to,
+        cc,
       });
+      createNote.object[0].published = createNote.published;
       if (apex.domain.startsWith("localhost")) {
-        console.log("Not delivering activity in dev mode");
+        console.log("Not delivering activity in dev mode", JSON.stringify(createNote, undefined, 2));
         await apex.store.saveActivity(createNote);
       } else {
         await apex.addToOutbox(shopKeep, createNote);

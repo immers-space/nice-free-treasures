@@ -102,7 +102,7 @@ export function AvatarEditorContainer() {
         setClaimStatus("shared");
         setNftUrl(offerIRI);
       } else if (compat === "ActivityPub") {
-        const postIRI = await window
+        await window
           .fetch(`/share-treasure`, {
             method: "POST",
             headers: {
