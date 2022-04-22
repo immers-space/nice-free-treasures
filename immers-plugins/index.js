@@ -78,6 +78,7 @@ module.exports = function (app, immer, apex) {
       const createNote = await apex.buildActivity("Create", shopKeepId, to, {
         inReplyTo: create.id,
         object: {
+          id: apex.utils.objectIdToIRI(),
           type: "Note",
           attributedTo: shopKeepId,
           content: `This <a href="${create.id}">Nice Free Treasure</a> was created for ${handle}`,
