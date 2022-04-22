@@ -365,7 +365,8 @@ iframe.activity-embed {
   flex-grow: 1;
 }
 
-@media (min-aspect-ratio: 5/8) {
+/* landscape */
+@media (min-aspect-ratio: 5/8) and (min-width: 480px) {
   #root {
     flex-direction: column;
   }
@@ -381,6 +382,13 @@ iframe.activity-embed {
     display: block;
   }
 }
+/* mobile portrait with keyboard open */
+@media (min-aspect-ratio: 5/8) and (max-width: 479px) {
+  #sceneContainer {
+    display: none;
+  }
+}
+
  @media (min-width: 800px) and (min-height: 800px) {
   .toolbar {
     padding: 20px 40px;
