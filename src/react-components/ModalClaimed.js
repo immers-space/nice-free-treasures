@@ -14,11 +14,7 @@ export function ModalClaimed({ nftUrl, compat }) {
         await immersClient.login(window.location.href, "modAdditive", profile.handle);
       }
       await immersClient.addAvatar(nftUrl);
-      const treasureOffer = await immersClient.activities.getObject(nftUrl);
-      await immersClient.activities.updateProfile({
-        icon: ImmersClient.URLFromProperty(treasureOffer.object.icon),
-        avatar: treasureOffer.object,
-      });
+      await immersClient.useAvatar(nftUrl);
       setCollecting("done");
     } catch (error) {
       console.error(error);
