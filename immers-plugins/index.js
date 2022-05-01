@@ -86,6 +86,7 @@ module.exports = function (app, immer, apex) {
           attributedTo: shopKeepId,
           content: `<p>This <a href="${create.id}">Nice Free Treasure</a> was created for ${tag}</p>`,
           tag: [{ type: "Mention", href: claimee.id, name: `@${handle}` }],
+          attachment: [create.object[0].icon],
           to,
           cc,
         },
