@@ -1,0 +1,15 @@
+.aesthetic-windows-95-taskbar-start a {
+  font-size: 0;
+}
+
+.aesthetic-windows-95-taskbar-start a::after {
+  font-size: 24px;
+  content: 'Claim another treasure';
+  padding-left: 8px;
+}
+
+@media (max-width: 925px) {
+  h1.aesthetic-50-transparent-color {
+    font-size: 30px;
+  }
+}
