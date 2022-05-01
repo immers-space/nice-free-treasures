@@ -1,12 +1,22 @@
 import { ImmersClient } from "immers-client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { useStore } from "../store";
-import { immersClient } from "../utils/immers";
+import { getShopKeepActivities, immersClient } from "../utils/immers";
 
 export function ModalClaimed({ nftUrl, compat }) {
   const profile = useStore(useCallback((state) => state.profile));
   const [collecting, setCollecting] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [glbUrl, setGlbUrl] = useState("");
+  useEffect(async () => {
+    if (!nftUrl) {
+      return;
+    }
+    const nft = await (await getShopKeepActivities()).getObject(nftUrl);
+    setImageUrl(ImmersClient.URLFromProperty(nft.object.icon));
+    setGlbUrl(ImmersClient.URLFromProperty(nft.object));
+  }, [nftUrl, setImageUrl, setGlbUrl]);
   const handleCollect = useCallback(async () => {
     setCollecting("pending");
     try {
@@ -43,26 +53,34 @@ export function ModalClaimed({ nftUrl, compat }) {
           <br />
           <a href={nftUrl}>{nftUrl}</a>
         </p>
-        {compat === "WebCollectibles" && (
-          <p>
+        {compat === "ActivityPub" && (
+          <h5>A link to this has been shared to you timeline &ndash; boost it to show off your treasure.</h5>
+        )}
+        <p className="claimed-actions">
+          {compat === "WebCollectibles" && (
             <Button variant="primary" onClick={handleCollect} disabled={!!collecting}>
-              Set as My Avatar
+              Set Avatar
               {collecting == "pending" && <Spinner animation="border" size="sm" />}
               {collecting == "done" && " ✔️"}
             </Button>
-            {collecting == "done" && (
-              <a target="_blank" href={`${profile.id}/Inbox`}>
-                View on your profile
-              </a>
-            )}
-          </p>
-        )}
-        {compat === "ActivityPub" && <p>A link to this has been shared to you timeline as well.</p>}
-        {twitterIntent && (
-          <p>
+          )}
+          {twitterIntent && (
             <Button variant="primary" href={twitterIntent.href}>
               Share on Twitter
             </Button>
+          )}
+          <Button variant="secondary" href={imageUrl} download disabled={!imageUrl}>
+            Save Image
+          </Button>
+          <Button variant="secondary" href={glbUrl} download disabled={!glbUrl}>
+            Save Model
+          </Button>
+        </p>
+        {collecting == "done" && (
+          <p>
+            <a target="_blank" href={`${profile.id}/Inbox`}>
+              View on your profile
+            </a>
           </p>
         )}
         <iframe className="activity-embed" allow="monetization fullscreen xr-spatial-tracking" src={nftUrl} />

@@ -332,6 +332,10 @@ button.primary:focus {
   text-overflow: ellipsis;
 }
 
+.claimed-actions button, .claimed-actions a[role="button"] {
+  margin: 3px;
+}
+
 @keyframes wave {
   from { background-position-y: 0 }
   to { background-position-y: 400px; }
