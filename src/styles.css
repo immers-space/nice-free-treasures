@@ -362,7 +362,7 @@ button.primary:focus {
 .modal-claimed .modal-body {
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: 85vh;
 }
 
 iframe.activity-embed {
