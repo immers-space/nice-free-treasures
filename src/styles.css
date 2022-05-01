@@ -366,7 +366,7 @@ button.primary:focus {
 .modal-claimed .modal-body {
   display: flex;
   flex-direction: column;
-  height: 85vh;
+  height: 90vh;
 }
 
 iframe.activity-embed {
@@ -422,5 +422,8 @@ iframe.activity-embed {
   }
   .waveContainer {
     width: 60px;
+  }
+  .modal-claimed .modal-body {
+    height: calc(90vh - 2rem);
   }
  }
